@@ -1,7 +1,7 @@
 import java.io.*;
 import java.util.Arrays;
 
-public class Basket {
+public class Basket implements Serializable {
     private int sum;
     private int[] price;
     private String[] products;
@@ -19,67 +19,34 @@ public class Basket {
         selectedPrices = new int[products.length];
     }
 
+
     public void addToCart(int productNum, int amount) {
         selectedProductArray[productNum - 1] = products[productNum - 1];
         selectedPrices[productNum - 1] = price[productNum - 1];
         numbersProductsArray[productNum - 1] = numbersProductsArray[productNum - 1] + amount;
     }
 
-    public void printCart() {
-        for (int i = 0; i < numbersProductsArray.length; i++) {
-            sum = sum + price[i] * numbersProductsArray[i];
-        }
-        System.out.println("Ваша корзина: ");
-        for (int i = 0; i < selectedProductArray.length; i++) {
-            if (selectedProductArray[i] != null) {
-                System.out.println(selectedProductArray[i] + " " + numbersProductsArray[i] + " шт " + price[i] + " руб/шт " + numbersProductsArray[i] * price[i] + " руб в сумме");
-            }
-        }
-        System.out.println("Итого " + sum + " руб");
-    }
 
-    public void saveTxt(File textFile) throws IOException {
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(textFile))) {
-            for (int i = 0; i < products.length; i++) {
-                if (products[i] != null) {
-                    bufferedWriter.write(products[i] + " ");
-                }
-            }
-            bufferedWriter.newLine();
-            for (int i = 0; i < selectedPrices.length; i++) {
-                bufferedWriter.write(selectedPrices[i] + " ");
-            }
-            bufferedWriter.newLine();
-            for (int i = 0; i < numbersProductsArray.length; i++) {
-                bufferedWriter.write(numbersProductsArray[i] + " ");
-            }
-
+    public void saveBin(File file) {
+        try (FileOutputStream fos = new FileOutputStream(file);
+             ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+            oos.writeObject(this);
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
         }
     }
 
-    static Basket loadFromTxtFile(File textFile) {
-        Basket basket = new Basket();
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(textFile))) {
-            String selectedProductArrayStr = bufferedReader.readLine();
-            String priceStr = bufferedReader.readLine();
-            String numbersProductsArrayStr = bufferedReader.readLine();
-
-            basket.selectedProductArray = selectedProductArrayStr.split(" ");
-
-            basket.selectedPrices = Arrays.stream(priceStr.split(" "))
-                    .map(Integer::parseInt)
-                    .mapToInt(Integer::intValue)
-                    .toArray();
-
-            basket.numbersProductsArray = Arrays.stream(numbersProductsArrayStr.split(" "))
-                    .map(Integer::parseInt)
-                    .mapToInt(Integer::intValue)
-                    .toArray();
-        } catch (IOException a) {
-            throw new RuntimeException(a);
+    public static void loadFromBinFile(File file) {
+        Basket basket = null;
+        try (FileInputStream fis = new FileInputStream(file);
+             ObjectInputStream ois = new ObjectInputStream(fis)) {
+            basket = (Basket) ois.readObject();
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
         }
-        return basket;
+        System.out.println(basket);
     }
+
 
     public int[] getPrice() {
         return price;

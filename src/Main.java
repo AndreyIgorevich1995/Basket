@@ -4,16 +4,11 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) throws Exception {
 
-        File basket = new File("basket.txt");
+        File basket = new File("basket.bin");
         basket.createNewFile();
         Scanner scanner = new Scanner(System.in);
-        Basket myBasket = null;
+        Basket myBasket = new Basket();
 
-        if (basket.exists()) {
-            myBasket = Basket.loadFromTxtFile(basket);
-        } else {
-            myBasket = new Basket();
-        }
 
         while (true) {
 
@@ -32,11 +27,7 @@ public class Main {
             int numberProducts = Integer.parseInt(purchases[1]);//выбранное количество продукта
             myBasket.addToCart(selectedProduct, numberProducts);
         }
-
-        myBasket.printCart();
-        myBasket.saveTxt(basket);
-
-        Basket.loadFromTxtFile(basket);
-        System.out.println(Basket.loadFromTxtFile(basket));
+        myBasket.saveBin(basket);
+        Basket.loadFromBinFile(basket);
     }
 }
