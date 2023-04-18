@@ -89,6 +89,7 @@ public class Basket {
         return products;
     }
 
+
     @Override
     public String toString() {
         return "Basket{" +
@@ -99,5 +100,21 @@ public class Basket {
                 ", selectedProductArray=" + Arrays.toString(selectedProductArray) +
                 ", selectedPrices=" + Arrays.toString(selectedPrices) +
                 '}';
+    }
+
+    public int getSum() {
+        return sum;
+    }
+
+    public int[] getNumbersProductsArray() {
+        return numbersProductsArray;
+    }
+
+    public String[] getSelectedProductArray() {
+        return selectedProductArray;
+    }
+
+    public int[] getSelectedPrices() {
+        return selectedPrices;
     }
 }

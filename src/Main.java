@@ -1,9 +1,10 @@
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-
+        ClientLog clientLog = new ClientLog("Vasiliy", new Basket(), new ArrayList<>(), new ArrayList<>());
         File basket = new File("basket.txt");
         basket.createNewFile();
         Scanner scanner = new Scanner(System.in);
@@ -28,11 +29,15 @@ public class Main {
                 break;
             }
             String[] purchases = input.split(" ");
+
+
+            clientLog.log(Integer.parseInt(purchases[0]), Integer.parseInt(purchases[1]));
+
             int selectedProduct = Integer.parseInt(purchases[0]);  //выбранный продукт
             int numberProducts = Integer.parseInt(purchases[1]);//выбранное количество продукта
             myBasket.addToCart(selectedProduct, numberProducts);
         }
-
+        clientLog.exportAsCSV(new File("log"));
         myBasket.printCart();
         myBasket.saveTxt(basket);
 
