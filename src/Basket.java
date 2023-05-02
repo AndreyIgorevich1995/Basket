@@ -1,3 +1,7 @@
+import netscape.javascript.JSObject;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 import java.io.*;
 import java.util.Arrays;
 
@@ -54,6 +58,41 @@ public class Basket {
                 bufferedWriter.write(numbersProductsArray[i] + " ");
             }
 
+        }
+    }
+
+    public void saveTxtToJson(File textFile) throws IOException {
+        JSONObject basket = new JSONObject();
+
+        JSONArray productss = new JSONArray();
+        for (int i = 0; i < products.length; i++) {
+            JSONObject a = new JSONObject();
+            a.put("products", products[i]);
+            productss.add(a);
+        }
+        basket.put("products", productss);
+
+        JSONArray selectedPricess = new JSONArray();
+        for (int i = 0; i < selectedPrices.length; i++) {
+            JSONObject b = new JSONObject();
+            b.put("selectedPrices", selectedPrices[i]);
+            productss.add(b);
+        }
+        basket.put("selectedPrices", selectedPricess);
+
+        JSONArray numbersProductsArrays = new JSONArray();
+        for (int i = 0; i < numbersProductsArray.length; i++) {
+            JSONObject b = new JSONObject();
+            b.put("numbersProductsArray", numbersProductsArray[i]);
+            productss.add(b);
+        }
+        basket.put("numbersProductsArray", numbersProductsArrays);
+
+        try (FileWriter file = new FileWriter(textFile)) {
+            file.write(productss.toJSONString());
+            file.flush();
+        } catch (IOException x) {
+            x.printStackTrace();
         }
     }
 

@@ -1,20 +1,74 @@
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws Exception {
         ClientLog clientLog = new ClientLog("Vasiliy", new Basket(), new ArrayList<>(), new ArrayList<>());
-        File basket = new File("basket.txt");
-        basket.createNewFile();
-        Scanner scanner = new Scanner(System.in);
-        Basket myBasket = null;
+//        File basket = new File("basket.txt");
+//        basket.createNewFile();
 
-        if (basket.exists()) {
-            myBasket = Basket.loadFromTxtFile(basket);
-        } else {
-            myBasket = new Basket();
+        File basketForJson = new File("basket.json");
+        basketForJson.createNewFile();
+
+        Scanner scanner = new Scanner(System.in);
+        Basket myBasket = new Basket();
+//        Basket myBasket = null;
+
+        JSONParser parser = new JSONParser();
+        try {
+            Object obj = parser.parse(new FileReader(basketForJson));
+            JSONObject basketObject = (JSONObject) obj;
+
+
+            JSONArray arrayProducts = (JSONArray) basketObject.get("products");
+            for (Object o : arrayProducts) {
+                System.out.println(o);
+//                JSONObject arrayProducts1 = (JSONObject) o;
+            }
+
+
+            JSONArray arraySelectedPrices = (JSONArray) basketObject.get("selectedPrices");
+            for (Object o : arraySelectedPrices) {
+                System.out.println(o);
+            }
+
+            JSONArray arrayNumbersProductsArray = (JSONArray) basketObject.get("numbersProductsArray");
+            for (Object o : arrayNumbersProductsArray) {
+                System.out.println(o);
+            }
+
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
         }
+
+//        JSONObject basketObject = new JSONObject();
+//        if (basketForJson.exists()) {
+//            GsonBuilder a = new GsonBuilder();
+//            Gson gson = a.create();
+//            System.out.println(gson.toJson(basketForJson));
+//            myBasket = gson.fromJson(basketObject.toJSONString(), Basket.class);
+//            System.out.println(myBasket.toString());
+////            myBasket = Basket.loadFromTxtFile(basketForJson);
+//        } else {
+//            myBasket = new Basket();
+//        }
+
+
+//        if (basket.exists()) {
+//            myBasket = Basket.loadFromTxtFile(basket);
+//        } else {
+//            myBasket = new Basket();
+//        }
 
         while (true) {
 
@@ -39,9 +93,10 @@ public class Main {
         }
         clientLog.exportAsCSV(new File("log"));
         myBasket.printCart();
-        myBasket.saveTxt(basket);
+//        myBasket.saveTxt(basket);
+        myBasket.saveTxtToJson(basketForJson);
 
-        Basket.loadFromTxtFile(basket);
-        System.out.println(Basket.loadFromTxtFile(basket));
+//        Basket.loadFromTxtFile(basket);
+//        System.out.println(Basket.loadFromTxtFile(basket));
     }
 }
